@@ -59,7 +59,14 @@ export const qrPayloadBuilders = {
   whatsapp: (data: WhatsAppPayload): string => {
     // Format: https://wa.me/PHONE_NUMBER?text=MESSAGE
     // Phone must be digital-only with country code
-    const cleanPhone = data.phone.trim().replace(/[^0-9]/g, '');
+    let phone = data.phone.trim();
+    if (phone.startsWith('+')) {
+      phone = phone.substring(1);
+    }
+    if (phone.startsWith('0')) {
+      phone = '62' + phone.substring(1);
+    }
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
     const text = encodeURIComponent(data.message);
     return `https://wa.me/${cleanPhone}${text ? `?text=${text}` : ''}`;
   },

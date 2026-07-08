@@ -100,11 +100,19 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
           title = `SMS to: ${smsData.phone}`;
           break;
         case 'whatsapp':
-          // Must have numbers only
-          const purePhone = whatsappData.phone.replace(/[^0-9]/g, '');
-          if (purePhone.length < 8) currentErr = 'WhatsApp phone must contain a valid country code and digit prefix.';
+          let waPhone = whatsappData.phone.trim();
+          if (waPhone.startsWith('+')) {
+            waPhone = waPhone.substring(1);
+          }
+          if (waPhone.startsWith('0')) {
+            waPhone = '62' + waPhone.substring(1);
+          }
+          const purePhone = waPhone.replace(/[^0-9]/g, '');
+          if (purePhone.length < 8) {
+            currentErr = 'Nomor WhatsApp tidak valid. Pastikan nomor benar (minimal 8 digit). / WhatsApp phone must contain a valid country code (min 8 digits).';
+          }
           payload = qrPayloadBuilders.whatsapp(whatsappData);
-          title = `WhatsApp: ${whatsappData.phone}`;
+          title = `WhatsApp: ${waPhone}`;
           break;
         case 'wifi':
           currentErr = qrValidators.wifi(wifiData.ssid, wifiData.security, wifiData.password);
@@ -156,13 +164,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
 
     setErrorMsg(currentErr);
     onChange(payload, isValid && !currentErr, title);
-  }, [activeType, urlData, textData, emailData, phoneData, smsData, whatsappData, wifiData, locationData, vcardData, eventData, cryptoData, upiData, customData]);
-
-  return (
+  }, [activeType, urlData, textData, emailData, phoneData, smsData, whatsappData, wifiData, locationData, vcardData, eventData, cryptoData, upiData, customData]);  return (
     <div className="flex flex-col gap-6">
       {/* 1. Horizontal Scrollable Tabs */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold text-zinc-900 dark:text-zinc-200">
+        <label className="text-sm font-bold text-foreground">
           Select QR Content Type
         </label>
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none snap-x mask-gradient">
@@ -173,10 +179,10 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
               <button
                 key={cfg.type}
                 onClick={() => setActiveType(cfg.type)}
-                className={`snap-start flex items-center gap-2 px-4 py-2.5 rounded-xl border font-medium text-xs whitespace-nowrap transition-all ${
+                className={`snap-start flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-xs whitespace-nowrap cursor-pointer transition-all ${
                   isSelected
-                    ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/10'
-                    : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:border-zinc-300 dark:hover:border-zinc-700'
+                    ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/10'
+                    : 'bg-card border-border text-muted-foreground hover:bg-secondary hover:border-border-hover hover:text-foreground'
                 }`}
                 id={`payload-tab-${cfg.type}`}
               >
@@ -189,15 +195,15 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
       </div>
 
       {/* 2. Payload Settings Grid Cards */}
-      <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 p-5 md:p-6 shadow-sm">
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-5 font-semibold tracking-wide uppercase">
+      <div className="bg-card rounded-2xl border border-border p-5 md:p-6 shadow-sm transition-all duration-300">
+        <p className="text-xs text-muted-foreground mb-5 font-bold tracking-wide uppercase">
           {QR_TYPE_CONFIGS.find((c) => c.type === activeType)?.desc}
         </p>
 
         {/* URL Form */}
         {activeType === 'url' && (
           <div className="flex flex-col gap-2">
-            <label htmlFor="url-input" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="url-input" className="text-xs font-bold text-muted-foreground">
               Destination URL
             </label>
             <input
@@ -206,7 +212,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
               placeholder="e.g., example.com"
               value={urlData.url}
               onChange={(e) => setUrlData({ url: e.target.value })}
-              className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+              className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
             />
           </div>
         )}
@@ -214,7 +220,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {/* Plain Text Form */}
         {activeType === 'text' && (
           <div className="flex flex-col gap-2">
-            <label htmlFor="text-input" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="text-input" className="text-xs font-bold text-muted-foreground">
               Text Message
             </label>
             <textarea
@@ -223,7 +229,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
               value={textData.text}
               onChange={(e) => setTextData({ text: e.target.value })}
               rows={4}
-              className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium resize-none"
+              className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold resize-none"
             />
           </div>
         )}
@@ -232,7 +238,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {activeType === 'email' && (
           <div className="grid grid-cols-1 gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="email-to" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="email-to" className="text-xs font-bold text-muted-foreground">
                 Recipient Email
               </label>
               <input
@@ -241,11 +247,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="recipient@domain.com"
                 value={emailData.email}
                 onChange={(e) => setEmailData({ ...emailData, email: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="email-subject" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="email-subject" className="text-xs font-bold text-muted-foreground">
                 Subject Line
               </label>
               <input
@@ -254,11 +260,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Inquiry or Hello"
                 value={emailData.subject}
                 onChange={(e) => setEmailData({ ...emailData, subject: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="email-body" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="email-body" className="text-xs font-bold text-muted-foreground">
                 Email Body
               </label>
               <textarea
@@ -267,7 +273,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 value={emailData.body}
                 onChange={(e) => setEmailData({ ...emailData, body: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium resize-none"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold resize-none"
               />
             </div>
           </div>
@@ -276,7 +282,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {/* Phone Form */}
         {activeType === 'phone' && (
           <div className="flex flex-col gap-2">
-            <label htmlFor="phone-input" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="phone-input" className="text-xs font-bold text-muted-foreground">
               Phone Number
             </label>
             <input
@@ -285,7 +291,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
               placeholder="+628123456789"
               value={phoneData.phone}
               onChange={(e) => setPhoneData({ phone: e.target.value })}
-              className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+              className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
             />
           </div>
         )}
@@ -294,7 +300,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {activeType === 'sms' && (
           <div className="grid grid-cols-1 gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="sms-phone" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="sms-phone" className="text-xs font-bold text-muted-foreground">
                 Phone Number
               </label>
               <input
@@ -303,11 +309,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="+628123456789"
                 value={smsData.phone}
                 onChange={(e) => setSmsData({ ...smsData, phone: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="sms-msg" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="sms-msg" className="text-xs font-bold text-muted-foreground">
                 Default Message
               </label>
               <textarea
@@ -316,7 +322,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 value={smsData.message}
                 onChange={(e) => setSmsData({ ...smsData, message: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium resize-none"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold resize-none"
               />
             </div>
           </div>
@@ -324,32 +330,84 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
 
         {/* WhatsApp Form */}
         {activeType === 'whatsapp' && (
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-5">
             <div className="flex flex-col gap-2">
-              <label htmlFor="wa-phone" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                Phone with Country Code (numbers only, e.g., 628123456789)
-              </label>
+              <div className="flex justify-between items-center gap-2">
+                <label htmlFor="wa-phone" className="text-xs font-bold text-muted-foreground">
+                  Nomor WhatsApp / WhatsApp Number
+                </label>
+                <span className="text-[10px] text-muted-foreground font-semibold text-right">
+                  Mendukung format lokal (08...) & internasional (+62...)
+                </span>
+              </div>
               <input
                 id="wa-phone"
                 type="text"
-                placeholder="628123456789"
+                placeholder="Contoh: 08123456789 atau 628123456789"
                 value={whatsappData.phone}
                 onChange={(e) => setWhatsappData({ ...whatsappData, phone: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
+
+              {/* Real-time normalization helper display */}
+              {whatsappData.phone.trim() && (
+                <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 mt-1 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>
+                    Format yang dikodekan: <strong>
+                      {(() => {
+                        let phone = whatsappData.phone.trim();
+                        if (phone.startsWith('+')) phone = phone.substring(1);
+                        if (phone.startsWith('0')) phone = '62' + phone.substring(1);
+                        return phone.replace(/[^0-9]/g, '');
+                      })()}
+                    </strong> (Aman untuk kirim pesan langsung)
+                  </span>
+                </div>
+              )}
             </div>
+
             <div className="flex flex-col gap-2">
-              <label htmlFor="wa-msg" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                Default WhatsApp Message
-              </label>
+              <div className="flex justify-between items-center gap-2">
+                <label htmlFor="wa-msg" className="text-xs font-bold text-muted-foreground">
+                  Isi Pesan Otomatis / Default Message
+                </label>
+                <span className="text-[10px] text-muted-foreground font-semibold text-right">
+                  Pesan yang langsung terisi di chat WhatsApp
+                </span>
+              </div>
               <textarea
                 id="wa-msg"
-                placeholder="Enter pre-filled WhatsApp chat text..."
+                placeholder="Tulis pesan otomatis di sini..."
                 value={whatsappData.message}
                 onChange={(e) => setWhatsappData({ ...whatsappData, message: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium resize-none"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold resize-none"
               />
+
+              {/* Message Templates / Preset Chips */}
+              <div className="flex flex-col gap-1.5 mt-1">
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                  Gunakan Template Pesan Cepat:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { label: 'Tanya Produk', text: 'Halo Admin, saya tertarik dengan produk Anda dan ingin bertanya lebih lanjut.' },
+                    { label: 'Tanya Promo', text: 'Halo! Apakah ada promo atau diskon menarik yang sedang berlangsung saat ini?' },
+                    { label: 'Daftar Acara', text: 'Halo, saya ingin melakukan konfirmasi pendaftaran untuk acara Anda.' },
+                    { label: 'Layanan Pelanggan', text: 'Halo Tim Support, saya membutuhkan bantuan terkait layanan Anda.' },
+                  ].map((preset, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setWhatsappData({ ...whatsappData, message: preset.text })}
+                      className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-secondary hover:bg-secondary-hover text-foreground border border-border cursor-pointer transition-all"
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -358,7 +416,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {activeType === 'wifi' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2 col-span-1 md:col-span-2">
-              <label htmlFor="wifi-ssid" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="wifi-ssid" className="text-xs font-bold text-muted-foreground">
                 WiFi Network Name (SSID)
               </label>
               <input
@@ -367,26 +425,26 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Home_WiFi_5G"
                 value={wifiData.ssid}
                 onChange={(e) => setWifiData({ ...wifiData, ssid: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="wifi-security" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="wifi-security" className="text-xs font-bold text-muted-foreground">
                 Security Protocol
               </label>
               <select
                 id="wifi-security"
                 value={wifiData.security}
                 onChange={(e) => setWifiData({ ...wifiData, security: e.target.value as any })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold cursor-pointer"
               >
-                <option value="WPA">WPA/WPA2</option>
-                <option value="WEP">WEP</option>
-                <option value="nopass">None (Unsecured)</option>
+                <option value="WPA" className="bg-card">WPA/WPA2</option>
+                <option value="WEP" className="bg-card">WEP</option>
+                <option value="nopass" className="bg-card">None (Unsecured)</option>
               </select>
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="wifi-pass" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="wifi-pass" className="text-xs font-bold text-muted-foreground">
                 Network Password
               </label>
               <input
@@ -396,7 +454,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 value={wifiData.password}
                 disabled={wifiData.security === 'nopass'}
                 onChange={(e) => setWifiData({ ...wifiData, password: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium disabled:opacity-50"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold disabled:opacity-50"
               />
             </div>
             <div className="flex items-center gap-2 col-span-1 md:col-span-2 pt-2">
@@ -405,9 +463,9 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 type="checkbox"
                 checked={wifiData.hidden}
                 onChange={(e) => setWifiData({ ...wifiData, hidden: e.target.checked })}
-                className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 dark:bg-zinc-950 border-zinc-300 dark:border-zinc-800"
+                className="w-4 h-4 rounded text-primary focus:ring-primary bg-secondary border-border"
               />
-              <label htmlFor="wifi-hidden" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 select-none">
+              <label htmlFor="wifi-hidden" className="text-xs font-bold text-muted-foreground select-none cursor-pointer">
                 Hidden SSID Network
               </label>
             </div>
@@ -418,7 +476,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {activeType === 'location' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="loc-lat" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="loc-lat" className="text-xs font-bold text-muted-foreground">
                 Latitude (-90 to 90)
               </label>
               <input
@@ -428,11 +486,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="-6.200000"
                 value={locationData.latitude}
                 onChange={(e) => setLocationData({ ...locationData, latitude: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="loc-lng" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="loc-lng" className="text-xs font-bold text-muted-foreground">
                 Longitude (-180 to 180)
               </label>
               <input
@@ -442,7 +500,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="106.816666"
                 value={locationData.longitude}
                 onChange={(e) => setLocationData({ ...locationData, longitude: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
           </div>
@@ -452,7 +510,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {activeType === 'vcard' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="vc-first" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="vc-first" className="text-xs font-bold text-muted-foreground">
                 First Name
               </label>
               <input
@@ -461,11 +519,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Alex"
                 value={vcardData.firstName}
                 onChange={(e) => setVcardData({ ...vcardData, firstName: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="vc-last" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="vc-last" className="text-xs font-bold text-muted-foreground">
                 Last Name
               </label>
               <input
@@ -474,11 +532,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Morgan"
                 value={vcardData.lastName}
                 onChange={(e) => setVcardData({ ...vcardData, lastName: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="vc-phone" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="vc-phone" className="text-xs font-bold text-muted-foreground">
                 Phone
               </label>
               <input
@@ -487,11 +545,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="+628123456789"
                 value={vcardData.phone}
                 onChange={(e) => setVcardData({ ...vcardData, phone: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="vc-email" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="vc-email" className="text-xs font-bold text-muted-foreground">
                 Email
               </label>
               <input
@@ -500,11 +558,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="alex@acme.com"
                 value={vcardData.email}
                 onChange={(e) => setVcardData({ ...vcardData, email: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="vc-org" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="vc-org" className="text-xs font-bold text-muted-foreground">
                 Organization
               </label>
               <input
@@ -513,11 +571,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Acme Corp"
                 value={vcardData.organization}
                 onChange={(e) => setVcardData({ ...vcardData, organization: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="vc-title" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="vc-title" className="text-xs font-bold text-muted-foreground">
                 Title
               </label>
               <input
@@ -526,11 +584,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Director"
                 value={vcardData.title}
                 onChange={(e) => setVcardData({ ...vcardData, title: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="vc-url" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="vc-url" className="text-xs font-bold text-muted-foreground">
                 Website
               </label>
               <input
@@ -539,11 +597,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="acme.com"
                 value={vcardData.url}
                 onChange={(e) => setVcardData({ ...vcardData, url: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="vc-address" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="vc-address" className="text-xs font-bold text-muted-foreground">
                 Full Address
               </label>
               <input
@@ -552,7 +610,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="123 Main St, Jakarta"
                 value={vcardData.address}
                 onChange={(e) => setVcardData({ ...vcardData, address: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
           </div>
@@ -562,7 +620,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {activeType === 'event' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2 col-span-1 md:col-span-2">
-              <label htmlFor="evt-title" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="evt-title" className="text-xs font-bold text-muted-foreground">
                 Event Title
               </label>
               <input
@@ -571,11 +629,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Product Launch Showcase"
                 value={eventData.title}
                 onChange={(e) => setEventData({ ...eventData, title: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="evt-start" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="evt-start" className="text-xs font-bold text-muted-foreground">
                 Start Date & Time
               </label>
               <input
@@ -583,11 +641,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 type="datetime-local"
                 value={eventData.start}
                 onChange={(e) => setEventData({ ...eventData, start: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold cursor-pointer"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="evt-end" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="evt-end" className="text-xs font-bold text-muted-foreground">
                 End Date & Time
               </label>
               <input
@@ -595,11 +653,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 type="datetime-local"
                 value={eventData.end}
                 onChange={(e) => setEventData({ ...eventData, end: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold cursor-pointer"
               />
             </div>
             <div className="flex flex-col gap-2 col-span-1 md:col-span-2">
-              <label htmlFor="evt-loc" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="evt-loc" className="text-xs font-bold text-muted-foreground">
                 Location (Physical or Link)
               </label>
               <input
@@ -608,11 +666,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Grand Ballroom & Virtual"
                 value={eventData.location}
                 onChange={(e) => setEventData({ ...eventData, location: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2 col-span-1 md:col-span-2">
-              <label htmlFor="evt-desc" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="evt-desc" className="text-xs font-bold text-muted-foreground">
                 Description
               </label>
               <textarea
@@ -621,7 +679,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 value={eventData.description}
                 onChange={(e) => setEventData({ ...eventData, description: e.target.value })}
                 rows={2}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium resize-none"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold resize-none"
               />
             </div>
           </div>
@@ -631,24 +689,24 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {activeType === 'crypto' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="crypt-coin" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="crypt-coin" className="text-xs font-bold text-muted-foreground">
                 Cryptocurrency
               </label>
               <select
                 id="crypt-coin"
                 value={cryptoData.coin}
                 onChange={(e) => setCryptoData({ ...cryptoData, coin: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold cursor-pointer"
               >
-                <option value="bitcoin">Bitcoin (BTC)</option>
-                <option value="ethereum">Ethereum (ETH)</option>
-                <option value="solana">Solana (SOL)</option>
-                <option value="litecoin">Litecoin (LTC)</option>
-                <option value="dogecoin">Dogecoin (DOGE)</option>
+                <option value="bitcoin" className="bg-card">Bitcoin (BTC)</option>
+                <option value="ethereum" className="bg-card">Ethereum (ETH)</option>
+                <option value="solana" className="bg-card">Solana (SOL)</option>
+                <option value="litecoin" className="bg-card">Litecoin (LTC)</option>
+                <option value="dogecoin" className="bg-card">Dogecoin (DOGE)</option>
               </select>
             </div>
             <div className="flex flex-col gap-2 col-span-1 md:col-span-2">
-              <label htmlFor="crypt-addr" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="crypt-addr" className="text-xs font-bold text-muted-foreground">
                 Wallet Address
               </label>
               <input
@@ -657,11 +715,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Enter public address"
                 value={cryptoData.address}
                 onChange={(e) => setCryptoData({ ...cryptoData, address: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium font-mono text-xs"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-mono text-xs"
               />
             </div>
             <div className="flex flex-col gap-2 col-span-1 md:col-span-3">
-              <label htmlFor="crypt-amt" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="crypt-amt" className="text-xs font-bold text-muted-foreground">
                 Requested Amount (Optional)
               </label>
               <input
@@ -670,7 +728,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="0.005"
                 value={cryptoData.amount}
                 onChange={(e) => setCryptoData({ ...cryptoData, amount: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
           </div>
@@ -680,7 +738,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {activeType === 'upi' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="upi-vpa" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="upi-vpa" className="text-xs font-bold text-muted-foreground">
                 UPI ID (VPA)
               </label>
               <input
@@ -689,11 +747,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="merchant@upi"
                 value={upiData.vpa}
                 onChange={(e) => setUpiData({ ...upiData, vpa: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="upi-name" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="upi-name" className="text-xs font-bold text-muted-foreground">
                 Recipient Name
               </label>
               <input
@@ -702,11 +760,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Acme Store"
                 value={upiData.name}
                 onChange={(e) => setUpiData({ ...upiData, name: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="upi-amt" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="upi-amt" className="text-xs font-bold text-muted-foreground">
                 Amount (₹ - Optional)
               </label>
               <input
@@ -716,11 +774,11 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="150.00"
                 value={upiData.amount}
                 onChange={(e) => setUpiData({ ...upiData, amount: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label htmlFor="upi-note" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              <label htmlFor="upi-note" className="text-xs font-bold text-muted-foreground">
                 Transaction Note (Optional)
               </label>
               <input
@@ -729,7 +787,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
                 placeholder="Order #908"
                 value={upiData.note}
                 onChange={(e) => setUpiData({ ...upiData, note: e.target.value })}
-                className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-medium"
+                className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-semibold"
               />
             </div>
           </div>
@@ -738,7 +796,7 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
         {/* Custom Developer Payload Form */}
         {activeType === 'custom' && (
           <div className="flex flex-col gap-2">
-            <label htmlFor="custom-input" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+            <label htmlFor="custom-input" className="text-xs font-bold text-muted-foreground">
               Custom QR Raw Data Payload
             </label>
             <textarea
@@ -747,14 +805,14 @@ export function PayloadForms({ activeType, setActiveType, onChange }: PayloadFor
               value={customData.payload}
               onChange={(e) => setCustomData({ payload: e.target.value })}
               rows={4}
-              className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-zinc-900 dark:text-white transition-all font-mono text-xs resize-none"
+              className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:border-primary outline-none text-foreground transition-all font-mono text-xs resize-none animate-none"
             />
           </div>
         )}
 
         {/* Inline Input Error/Alert Messaging */}
         {errorMsg && (
-          <div className="mt-4 flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs text-rose-600 dark:text-rose-400 font-semibold">
+          <div className="mt-4 flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-xl text-xs text-destructive font-bold">
             <AlertCircle className="w-4 h-4 shrink-0" />
             {errorMsg}
           </div>

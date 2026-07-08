@@ -3,57 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
-import { QrCode, Sun, Moon, Laptop, Github } from 'lucide-react';
+import React from 'react';
+import { QrCode, Sun, Moon, Laptop } from 'lucide-react';
+import { useTheme } from './ThemeProvider';
 
 export function Header() {
-  const [theme, setTheme] = useState<'light' | 'dark' | 'auto'>('auto');
-
-  // Load theme preference on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('qr_gen_theme') as 'light' | 'dark' | 'auto' | null;
-    if (saved) {
-      setTheme(saved);
-      applyTheme(saved);
-    } else {
-      applyTheme('auto');
-    }
-  }, []);
-
-  const applyTheme = (mode: 'light' | 'dark' | 'auto') => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-
-    if (mode === 'light') {
-      root.classList.add('light');
-    } else if (mode === 'dark') {
-      root.classList.add('dark');
-    } else {
-      // Auto (System Theme)
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      root.classList.add(systemPrefersDark ? 'dark' : 'light');
-    }
-  };
-
-  const handleThemeChange = (mode: 'light' | 'dark' | 'auto') => {
-    setTheme(mode);
-    localStorage.setItem('qr_gen_theme', mode);
-    applyTheme(mode);
-  };
+  const { theme, setTheme } = useTheme();
 
   return (
-    <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md sticky top-0 z-40">
+    <header className="border-b border-border bg-card/75 backdrop-blur-md sticky top-0 z-40 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Left: Brand Identity */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-600 dark:bg-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-600/10 dark:shadow-indigo-500/10">
+          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/10 transition-colors duration-200">
             <QrCode className="w-5 h-5" id="header-logo-icon" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-zinc-900 dark:text-white tracking-tight leading-none">
+            <h1 className="text-lg font-bold text-foreground tracking-tight leading-none transition-colors duration-200">
               QR Generator Pro
             </h1>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 font-medium">
+            <p className="text-xs text-muted-foreground mt-1 font-medium transition-colors duration-200">
               Enterprise Grade • Production Ready
             </p>
           </div>
@@ -61,45 +30,45 @@ export function Header() {
 
         {/* Right: Theme Toggle Buttons */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center p-1 bg-zinc-100 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
+          <div className="flex items-center p-1 bg-secondary rounded-xl border border-border shadow-inner transition-colors duration-200">
             <button
-              onClick={() => handleThemeChange('light')}
-              className={`p-1.5 rounded-lg transition-all flex items-center gap-1 text-xs font-semibold ${
+              onClick={() => setTheme('light')}
+              className={`p-1.5 rounded-lg transition-all flex items-center gap-1 text-xs font-bold ${
                 theme === 'light'
-                  ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-md border-zinc-200'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  ? 'bg-card text-primary shadow-sm border border-border/40'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
               title="Light Mode"
               id="theme-light-btn"
             >
-              <Sun className="w-4 h-4" />
+              <Sun className="w-4 h-4 text-amber-500" />
               <span className="hidden sm:inline">Light</span>
             </button>
             <button
-              onClick={() => handleThemeChange('dark')}
-              className={`p-1.5 rounded-lg transition-all flex items-center gap-1 text-xs font-semibold ${
+              onClick={() => setTheme('dark')}
+              className={`p-1.5 rounded-lg transition-all flex items-center gap-1 text-xs font-bold ${
                 theme === 'dark'
-                  ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-md border-zinc-200'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+                  ? 'bg-card text-primary shadow-sm border border-border/40'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
               title="Dark Mode"
               id="theme-dark-btn"
             >
-              <Moon className="w-4 h-4" />
+              <Moon className="w-4 h-4 text-indigo-400" />
               <span className="hidden sm:inline">Dark</span>
             </button>
             <button
-              onClick={() => handleThemeChange('auto')}
-              className={`p-1.5 rounded-lg transition-all flex items-center gap-1 text-xs font-semibold ${
-                theme === 'auto'
-                  ? 'bg-white dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 shadow-md border-zinc-200'
-                  : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200'
+              onClick={() => setTheme('system')}
+              className={`p-1.5 rounded-lg transition-all flex items-center gap-1 text-xs font-bold ${
+                theme === 'system'
+                  ? 'bg-card text-primary shadow-sm border border-border/40'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
-              title="Auto Theme"
+              title="System Theme"
               id="theme-auto-btn"
             >
-              <Laptop className="w-4 h-4" />
-              <span className="hidden sm:inline">Auto</span>
+              <Laptop className="w-4 h-4 text-blue-500" />
+              <span className="hidden sm:inline">System</span>
             </button>
           </div>
         </div>

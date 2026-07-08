@@ -46,10 +46,10 @@ function ToastItem({ toast, onClose }: { toast: ToastMessage; onClose: (id: stri
   };
 
   const bgColors = {
-    success: 'bg-zinc-900/95 border-emerald-500/20 text-zinc-100',
-    error: 'bg-zinc-900/95 border-rose-500/20 text-zinc-100',
-    warning: 'bg-zinc-900/95 border-amber-500/20 text-zinc-100',
-    info: 'bg-zinc-900/95 border-sky-500/20 text-zinc-100',
+    success: 'bg-card/95 border-emerald-500/25 text-foreground',
+    error: 'bg-card/95 border-rose-500/25 text-foreground',
+    warning: 'bg-card/95 border-amber-500/25 text-foreground',
+    info: 'bg-card/95 border-sky-500/25 text-foreground',
   };
 
   return (
@@ -61,12 +61,12 @@ function ToastItem({ toast, onClose }: { toast: ToastMessage; onClose: (id: stri
       className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-xl backdrop-blur-md ${bgColors[toast.type]}`}
     >
       {icons[toast.type]}
-      <div className="flex-1 text-sm font-medium leading-relaxed leading-5">
+      <div className="flex-1 text-sm font-bold leading-relaxed leading-5">
         {toast.text}
       </div>
       <button
         onClick={() => onClose(toast.id)}
-        className="text-zinc-400 hover:text-zinc-100 transition-colors p-0.5 rounded-md hover:bg-zinc-800 shrink-0"
+        className="text-muted-foreground hover:text-foreground transition-colors p-0.5 rounded-md hover:bg-secondary shrink-0 cursor-pointer"
         aria-label="Close notification"
       >
         <X className="w-4 h-4" />

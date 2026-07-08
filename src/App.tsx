@@ -158,7 +158,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 transition-colors duration-300">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -172,8 +172,8 @@ export default function App() {
           {/* LEFT PANEL: Inputs and Style Customization (8 columns in desktop) */}
           <div className="lg:col-span-8 flex flex-col gap-8">
             {/* Input payload formats cards */}
-            <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col gap-6">
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
+            <div className="bg-card text-card-foreground border border-border rounded-3xl p-6 md:p-8 shadow-sm flex flex-col gap-6 transition-all duration-300">
+              <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
                 Configure Content Data
               </h2>
               <PayloadForms
@@ -184,7 +184,7 @@ export default function App() {
             </div>
 
             {/* Design customization accordion segment */}
-            <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col gap-6">
+            <div className="bg-card text-card-foreground border border-border rounded-3xl p-6 md:p-8 shadow-sm flex flex-col gap-6 transition-all duration-300">
               <StyleCustomizer
                 settings={settings}
                 setSettings={setSettings}

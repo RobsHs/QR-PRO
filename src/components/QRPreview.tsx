@@ -327,23 +327,23 @@ export function QRPreview({
   return (
     <div className="flex flex-col gap-6 sticky top-24">
       {/* 1. Preview Canvas Card Box */}
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-md flex flex-col items-center gap-6 relative overflow-hidden group">
+      <div className="bg-card text-card-foreground border border-border rounded-3xl p-6 shadow-md flex flex-col items-center gap-6 relative overflow-hidden group transition-all duration-300">
         {/* Decorative Grid Lines */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:14px_24px] opacity-10 pointer-events-none" />
 
         <div className="flex justify-between items-center w-full z-10">
-          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-full flex items-center gap-1.5 uppercase tracking-wide">
+          <span className="text-xs font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full flex items-center gap-1.5 uppercase tracking-wide">
             <Sparkles className="w-3.5 h-3.5" />
             Live Preview
           </span>
           <div className="flex items-center gap-1">
             {isValid ? (
-              <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10">
+              <span className="text-xs font-bold text-emerald-500 flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 Validated Safe
               </span>
             ) : (
-              <span className="text-xs font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-500/10 animate-pulse">
+              <span className="text-xs font-bold text-rose-500 flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 animate-pulse">
                 <ShieldAlert className="w-3.5 h-3.5" />
                 Incomplete Input
               </span>
@@ -352,7 +352,7 @@ export function QRPreview({
         </div>
 
         {/* The canvas container framing */}
-        <div className="relative w-full max-w-[280px] aspect-square rounded-2xl border border-zinc-100 dark:border-zinc-900 bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center p-3.5 shadow-inner transition-transform group-hover:scale-[1.01] duration-300">
+        <div className="relative w-full max-w-[280px] aspect-square rounded-2xl border border-border bg-secondary flex items-center justify-center p-3.5 shadow-inner transition-transform group-hover:scale-[1.01] duration-300">
           {isValid ? (
             <canvas
               ref={canvasRef}
@@ -365,8 +365,8 @@ export function QRPreview({
             />
           ) : (
             <div className="flex flex-col items-center text-center gap-3 p-4">
-              <QrCode className="w-12 h-12 text-zinc-300 dark:text-zinc-700 stroke-[1.5]" />
-              <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500">
+              <QrCode className="w-12 h-12 text-muted-foreground/30 stroke-[1.5]" />
+              <p className="text-xs font-bold text-muted-foreground">
                 Enter your payload to generate the custom styled QR Code instantly.
               </p>
             </div>
@@ -379,7 +379,7 @@ export function QRPreview({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-zinc-900/40 backdrop-blur-[2px] rounded-2xl flex flex-col items-center justify-center p-4 z-20"
+                className="absolute inset-0 bg-background/85 backdrop-blur-[2px] rounded-2xl flex flex-col items-center justify-center p-4 z-20"
               >
                 <div className="w-[85%] h-[85%] border-2 border-emerald-500 border-dashed rounded-xl relative overflow-hidden flex flex-col items-center justify-center">
                   {/* Glowing Green Sweeping Laser Line */}
@@ -388,7 +388,7 @@ export function QRPreview({
                     transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
                     className="absolute left-0 right-0 h-0.5 bg-emerald-400 shadow-[0_0_12px_#34d399,0_0_24px_#34d399] z-10"
                   />
-                  <span className="text-[10px] font-bold text-emerald-400 bg-zinc-950/80 px-2 py-1 rounded-md tracking-wider uppercase animate-pulse">
+                  <span className="text-[10px] font-bold text-emerald-500 bg-card border border-emerald-500/25 px-2 py-1 rounded-md tracking-wider uppercase animate-pulse">
                     Scanning Link...
                   </span>
                 </div>
@@ -404,19 +404,19 @@ export function QRPreview({
               <button
                 onClick={runScannerEmulator}
                 disabled={isEmulatorActive}
-                className="flex-1 py-2.5 px-4 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl text-xs font-bold transition-all border border-zinc-200 dark:border-zinc-800 flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 px-4 bg-secondary hover:bg-secondary/80 text-foreground rounded-xl text-xs font-bold transition-all border border-border flex items-center justify-center gap-2 cursor-pointer"
                 id="preview-emulator-test-btn"
               >
-                <Expand className="w-4 h-4 text-indigo-500 shrink-0" />
-                Test Scan Scanner
+                <Expand className="w-4 h-4 text-primary shrink-0" />
+                Test Scan Simulator
               </button>
               <button
                 onClick={copyImageToClipboard}
-                className="py-2.5 px-3 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-xl text-xs font-bold transition-all border border-zinc-200 dark:border-zinc-800 flex items-center justify-center gap-1.5"
+                className="py-2.5 px-3 bg-secondary hover:bg-secondary/80 text-foreground rounded-xl text-xs font-bold transition-all border border-border flex items-center justify-center gap-1.5 cursor-pointer"
                 title="Copy QR Code Image"
                 id="preview-copy-img-btn"
               >
-                <Copy className="w-4 h-4" />
+                <Copy className="w-4 h-4 text-muted-foreground" />
                 Copy
               </button>
             </div>
@@ -431,7 +431,7 @@ export function QRPreview({
                   className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex flex-col gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold"
                 >
                   <span className="text-[10px] tracking-wider uppercase opacity-75">Scanner Read Result:</span>
-                  <p className="font-mono bg-zinc-50 dark:bg-zinc-900/60 p-2 rounded-lg border border-zinc-200/50 dark:border-zinc-800/40 text-zinc-700 dark:text-zinc-300 break-all select-all font-medium leading-normal">
+                  <p className="font-mono bg-secondary p-2 rounded-lg border border-border text-foreground break-all select-all font-medium leading-normal">
                     {emulatorResult}
                   </p>
                 </motion.div>
@@ -443,8 +443,8 @@ export function QRPreview({
 
       {/* 2. Download/Export Panel Options */}
       {isValid && (
-        <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 shadow-sm flex flex-col gap-4">
-          <h3 className="text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
+        <div className="bg-card text-card-foreground border border-border rounded-3xl p-5 shadow-sm flex flex-col gap-4 transition-all duration-300">
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
             Export & Downloads
           </h3>
 
@@ -452,7 +452,7 @@ export function QRPreview({
             {/* Download PNG standard */}
             <button
               onClick={() => downloadImage('png')}
-              className="py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md shadow-indigo-600/10"
+              className="py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md shadow-indigo-600/10 cursor-pointer"
               id="export-png-btn"
             >
               <Download className="w-4 h-4 shrink-0" />
@@ -462,7 +462,7 @@ export function QRPreview({
             {/* Download Vector SVG */}
             <button
               onClick={downloadSvg}
-              className="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-600/10"
+              className="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-600/10 cursor-pointer"
               id="export-svg-btn"
             >
               <Download className="w-4 h-4 shrink-0" />
@@ -472,7 +472,7 @@ export function QRPreview({
             {/* Download PDF Print Document */}
             <button
               onClick={downloadPdf}
-              className="py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-100 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+              className="py-2.5 px-4 bg-foreground hover:bg-foreground/90 text-background rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
               id="export-pdf-btn"
             >
               <Printer className="w-4 h-4 shrink-0" />
@@ -482,7 +482,7 @@ export function QRPreview({
             {/* Print directly */}
             <button
               onClick={triggerPrint}
-              className="py-2.5 px-4 bg-zinc-50 hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+              className="py-2.5 px-4 bg-secondary hover:bg-secondary/80 border border-border text-foreground rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
               id="export-print-btn"
             >
               <Printer className="w-4 h-4 shrink-0" />
@@ -490,28 +490,28 @@ export function QRPreview({
             </button>
           </div>
 
-          <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-1" />
+          <div className="h-px bg-border my-1" />
 
           {/* Secondary Utilities */}
           <div className="grid grid-cols-3 gap-2">
             {/* JPG download */}
             <button
               onClick={() => downloadImage('jpeg')}
-              className="py-2 px-1 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-600 dark:text-zinc-300 rounded-lg text-xs font-semibold transition-all border border-zinc-200/60 dark:border-zinc-800/60"
+              className="py-2 px-1 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg text-xs font-semibold transition-all border border-border cursor-pointer"
             >
               JPG
             </button>
             {/* WEBP download */}
             <button
               onClick={() => downloadImage('webp')}
-              className="py-2 px-1 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-600 dark:text-zinc-300 rounded-lg text-xs font-semibold transition-all border border-zinc-200/60 dark:border-zinc-800/60"
+              className="py-2 px-1 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg text-xs font-semibold transition-all border border-border cursor-pointer"
             >
               WEBP
             </button>
             {/* Copy raw payload text string */}
             <button
               onClick={copyPayloadText}
-              className="py-2 px-1 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-850 text-zinc-600 dark:text-zinc-300 rounded-lg text-xs font-semibold transition-all border border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-center gap-1"
+              className="py-2 px-1 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg text-xs font-semibold transition-all border border-border flex items-center justify-center gap-1 cursor-pointer"
             >
               <Copy className="w-3.5 h-3.5 shrink-0" />
               Data
@@ -521,7 +521,7 @@ export function QRPreview({
           {/* Share QR using Web Share API */}
           <button
             onClick={shareQr}
-            className="w-full py-2 px-4 bg-transparent border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+            className="w-full py-2 px-4 bg-transparent border border-border hover:bg-secondary text-muted-foreground rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Share2 className="w-4 h-4 shrink-0" />
             Share with Web API
