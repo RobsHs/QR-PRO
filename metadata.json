@@ -1,0 +1,6 @@
+{
+  "name": "QR Code Generator",
+  "description": "Professional high-resolution QR code generator with custom styling, logos, history, and vector SVG exports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
