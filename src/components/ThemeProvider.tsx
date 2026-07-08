@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem('qr_gen_theme') as Theme | null;
     if (saved === 'dark') return 'dark';
     if (saved === 'light') return 'light';
-    
+
     // System fallback
     if (typeof window !== 'undefined') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -35,15 +35,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const root = window.document.documentElement;
-    
+
     // Smooth transitions
     root.classList.add('transition-colors', 'duration-300', 'ease-in-out');
 
     const updateTheme = () => {
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
+
       root.classList.remove('light', 'dark');
-      
+
       let resolved: 'light' | 'dark' = 'light';
       if (theme === 'dark') {
         root.classList.add('dark');
