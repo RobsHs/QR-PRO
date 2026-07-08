@@ -6,177 +6,313 @@
 [![Vite](https://img.shields.io/badge/Vite-6.2-646cff?style=flat-square&logo=vite)](https://vite.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-Aplikasi pembuat QR Code premium berbasis web yang berkinerja tinggi, beroperasi sepenuhnya secara *client-side* (tanpa server eksternal), serta memiliki fitur kustomisasi gaya piksel-presisi, penyematan logo kustom, pengaturan tata letak banner, ekspor vektor resolusi tinggi (SVG/PDF), serta manajemen riwayat lokal yang canggih.
+A high-performance premium web-based QR Code generator that operates entirely client-side (no external server required). It features pixel-perfect styling customization, custom logo embedding, banner layout management, high-resolution vector exports (SVG/PDF), and an advanced local history management system.
 
-Aplikasi ini dibangun menggunakan arsitektur modern **React 19**, **TypeScript**, dan engine utilitas gaya terbaru **Tailwind CSS v4** dengan bundler super cepat **Vite**.
-
----
-
-## ✨ Fitur Unggulan
-
-### 1. 📂 12+ Tipe Payload QR Code Terintegrasi
-Mendukung berbagai macam format data standar industri dengan validasi *real-time*:
-*   **Destination URL:** Tautan web aman dengan deteksi otomatis format HTTP/HTTPS.
-*   **Plain Text:** Pesan teks statis tanpa batas karakter.
-*   **Email Client:** Form siap kirim yang otomatis mengisi alamat email penerima, subjek, serta isi pesan (*body*).
-*   **Phone Number:** Membuka aplikasi telepon bawaan perangkat dengan nomor tujuan yang tepat.
-*   **SMS Sender:** Mengirim SMS interaktif dengan isi pesan default.
-*   **WhatsApp Chat:** Integrasi obrolan langsung lengkap dengan **normalisasi nomor telepon otomatis** (lokal & internasional) serta template pesan cepat (*quick presets*).
-*   **WiFi Network Connection:** Memudahkan koneksi nirkabel dengan mendefinisikan SSID, tipe keamanan (WPA/WPA2, WEP, Unsecured), kata sandi, serta tanda bendera *Hidden SSID* (jaringan tersembunyi).
-*   **Geolokasi (Location Coordinates):** Berbagi koordinat lintang (*latitude*) dan bujur (*longitude*) siap buka di aplikasi Google Maps atau peta lainnya.
-*   **vCard (Kartu Kontak Bisnis):** Kartu nama digital lengkap dengan Nama Depan, Nama Belakang, Nomor Telepon, Email, Nama Organisasi/Perusahaan, Jabatan, Tautan Website, hingga Alamat Rumah/Kantor.
-*   **Kalender Acara (Event Planner):** Jadwal kegiatan lengkap dengan Judul Acara, Waktu Mulai & Berakhir (*interactive datetime selection*), Lokasi Acara, dan Deskripsi Detail.
-*   **Crypto Address:** Alamat pembayaran cryptocurrency siap pakai untuk Bitcoin (BTC), Ethereum (ETH), Solana (SOL), Litecoin (LTC), dan Dogecoin (DOGE) beserta jumlah opsional.
-*   **UPI Payment Gateway:** Memfasilitasi pembayaran cepat di wilayah Asia Selatan dengan VPA (Virtual Payment Address), Nama Penerima, Jumlah Tagihan, dan Catatan Transaksi.
-*   **Custom Raw Payload:** Untuk kebutuhan *developer* tingkat lanjut dalam menyusun struktur *string* mentah secara manual.
-
-### 2. 🎨 Kustomisasi Desain Piksel-Presisi (*Style Customizer*)
-Kontrol penuh terhadap estetika visual QR Code untuk mencerminkan identitas merek Anda:
-*   **Modul QR & Sudut Bulat:**
-    *   Kustomisasi tingkat kebulatan modul (*module scale & roundness*) dari tajam klasik hingga bulat futuristik (*smooth dots*).
-    *   4 Desain Bingkai Luar Mata QR (*Eye Outer Style*): Square, Rounded, Leaf, dan Circle.
-    *   4 Desain Titik Tengah Mata QR (*Eye Inner Style*): Square, Rounded, Leaf, dan Circle.
-*   **Skema Warna & Gradien Modern:**
-    *   Mode isi warna tunggal (*Solid Color*) atau gradien linear dinamis (*Linear Gradient*).
-    *   Kontrol derajat sudut kemiringan gradien secara bebas (0° - 360°).
-    *   Warna latar belakang opsional (termasuk dukungan **Background Transparan** murni).
-    *   Fitur kustomisasi warna mata QR secara independen (*Independent Eye Colors*) untuk memisahkan warna bingkai luar dan titik tengah dari warna modul bodi utama.
-
-### 3. 🛡️ Penyematan Logo & Personal Brand (*Logo Branding*)
-*   Pilih dari beragam preset logo media sosial populer yang langsung tersedia.
-*   Unggah file logo kustom Anda sendiri (format PNG/JPG, mendukung ukuran file hingga 2MB).
-*   Kontrol parameter kustomisasi logo secara presisi:
-    *   Skala ukuran logo (*logo size slider*) untuk menjaga stabilitas keterbacaan kode.
-    *   Ketebalan margin pelindung logo (*logo card padding*).
-    *   Warna latar belakang wadah logo (*logo card background*) untuk menghindari tumpang tindih warna modul QR.
-
-### 4. 🖼️ Bingkai Banner Cetak Pintar (*Layout, Resolution & Banners*)
-*   Penerapan bingkai instan bertema **"SCAN ME"** untuk meningkatkan tingkat konversi pemindaian pengguna.
-*   Ubah teks pesan banner secara dinamis.
-*   Kustomisasi warna isi latar belakang banner (*banner fill color*) dan warna teks secara mandiri.
-*   Kustomisasi ketebalan zona tenang (*Quiet Zone Margin Cells*) untuk penyesuaian estetika tata letak cetak.
-
-### 5. 🚀 Engine Ekspor Resolusi Tinggi Tingkat Industri
-Telah diuji dengan hasil gambar tajam siap cetak di media apa pun:
-*   **Pilihan Preset Resolusi Ekspor:**
-    *   **512 x 512 px:** Cepat untuk pratinjau dan standar aplikasi pesan instan.
-    *   **1024 x 1024 px:** Kualitas tinggi untuk kebutuhan cetak brosur atau kartu nama.
-    *   **2048 x 2048 px:** Tajam sempurna (*Ultra HD*) untuk dokumen ukuran besar.
-    *   **4096 x 4096 px:** Kualitas maksimum (*Billboard Scale*) bebas pecah.
-*   **Dukungan Ekspor Multi-Format:**
-    *   **PNG / JPEG:** Format raster standar dengan kompresi optimal.
-    *   **SVG (Scalable Vector Graphics):** Format vektor murni, sangat disukai desainer profesional untuk diolah kembali di Adobe Illustrator atau Figma tanpa kehilangan ketajaman sedikit pun.
-    *   **PDF Document:** Berkas dokumen cetak portabel siap didistribusikan.
-
-### 6. 🕒 Manajemen Riwayat Lokal (*Persistent Generation History*)
-*   Penyimpanan riwayat otomatis yang hemat daya menggunakan *client-side* `localStorage`.
-*   Fitur pencarian (*search*) berdasarkan tipe payload, judul, atau konten untuk efisiensi tinggi.
-*   Muat ulang desain QR Code lama secara instan dengan sekali klik.
-*   Ekspor atau hapus riwayat secara kolektif maupun individual.
+Built with a modern technology stack including **React 19**, **TypeScript**, **Tailwind CSS v4**, and powered by the lightning-fast **Vite** bundler.
 
 ---
 
-## 🛠️ Arsitektur Proyek & Ekosistem Codebase
+# ✨ Features
 
-Struktur direktori dirancang dengan sangat modular untuk memisahkan logika matematika penggambaran QR dengan komponen interaksi antarmuka (UI):
+## 📂 12+ Built-in QR Code Payload Types
+
+Supports industry-standard QR payloads with real-time validation.
+
+- **Destination URL** – Secure website links with automatic HTTP/HTTPS detection.
+- **Plain Text** – Unlimited static text.
+- **Email** – Pre-filled email address, subject, and body.
+- **Phone Number** – Opens the device dialer automatically.
+- **SMS** – Generates SMS messages with predefined content.
+- **WhatsApp Chat**
+  - Automatic phone number normalization
+  - Local & international formats
+  - Quick message presets
+- **WiFi Network**
+  - SSID
+  - WPA/WPA2
+  - WEP
+  - Open Network
+  - Hidden SSID support
+- **Location Coordinates**
+  - Latitude & Longitude
+  - Compatible with Google Maps and other map applications
+- **vCard**
+  - First Name
+  - Last Name
+  - Phone Number
+  - Email
+  - Organization
+  - Job Title
+  - Website
+  - Address
+- **Calendar Event**
+  - Event title
+  - Start & end datetime
+  - Location
+  - Description
+- **Cryptocurrency Payment**
+  - Bitcoin
+  - Ethereum
+  - Solana
+  - Litecoin
+  - Dogecoin
+  - Optional payment amount
+- **UPI Payment**
+  - VPA
+  - Payee Name
+  - Amount
+  - Transaction Note
+- **Custom Raw Payload**
+  - Manual QR string builder for advanced users.
+
+---
+
+# 🎨 Pixel-Perfect Style Customization
+
+Complete visual control over every part of your QR Code.
+
+### QR Modules
+
+- Adjustable module roundness
+- Smooth dots
+- Classic square modules
+
+### Eye Styles
+
+Outer Eye Styles:
+
+- Square
+- Rounded
+- Leaf
+- Circle
+
+Inner Eye Styles:
+
+- Square
+- Rounded
+- Leaf
+- Circle
+
+### Colors & Gradients
+
+- Solid Color
+- Linear Gradient
+- Gradient angle (0°–360°)
+- Transparent background
+- Independent eye colors
+
+---
+
+# 🛡️ Logo Branding
+
+Personalize your QR Code with branding.
+
+- Built-in social media logo presets
+- Upload your own PNG/JPG logo (up to 2MB)
+
+Logo customization:
+
+- Logo size
+- Logo padding
+- Background color
+- Safe margin
+
+---
+
+# 🖼️ Smart Banner Layout
+
+Generate professional printable QR Codes.
+
+Features:
+
+- "SCAN ME" banner preset
+- Editable banner text
+- Custom banner colors
+- Custom text colors
+- Adjustable Quiet Zone
+
+---
+
+# 🚀 High Resolution Export Engine
+
+Designed for professional printing.
+
+## Export Presets
+
+- 512 × 512 px
+- 1024 × 1024 px
+- 2048 × 2048 px
+- 4096 × 4096 px
+
+## Supported Formats
+
+- PNG
+- JPEG
+- SVG
+- PDF
+
+---
+
+# 🕒 Persistent Local History
+
+Automatically stores QR generations using browser localStorage.
+
+Features:
+
+- Automatic history saving
+- Search by payload type
+- Search by title
+- Search by content
+- One-click restore
+- Export history
+- Delete individual or all records
+
+---
+
+# 🛠️ Project Structure
 
 ```text
 ├── src/
-│   ├── components/            # Komponen modular antarmuka pengguna (UI)
-│   │   ├── Header.tsx         # Bagian atas aplikasi & tombol navigasi
-│   │   ├── ThemeProvider.tsx  # Pengelola tema gelap/terang global
-│   │   ├── PayloadForms.tsx   # Pengendali form masukan dinamis (12 tipe)
-│   │   ├── StyleCustomizer.tsx# Panel pengaturan bentuk, warna, logo & bingkai
-│   │   ├── QRPreview.tsx      # Komponen penampil, pembagi, dan pengekspor QR
-│   │   ├── HistorySidebar.tsx # Sidebar riwayat persisten dengan filter pencarian
-│   │   └── Toast.tsx          # Sistem notifikasi pop-up interaktif
-│   ├── hooks/                 # Custom React hooks untuk fungsionalitas khusus
-│   │   └── useQrHistory.ts    # Enkapsulasi manajemen riwayat di localStorage
-│   ├── utils/                 # Utilitas fungsional pendukung aplikasi
-│   │   ├── qrDraw.ts          # Engine inti untuk menggambar modul, mata, bingkai, dan logo di Canvas/SVG
-│   │   └── qrPayloads.ts      # Helper parser, formatter, dan validator payload QR
-│   ├── types.ts               # Definisi tipe data TypeScript global yang kuat
-│   ├── index.css              # File entri utama CSS Tailwind v4
-│   ├── main.tsx               # Titik awal (entry-point) rendering aplikasi React
-│   └── App.tsx                # Komponen induk pengatur tata letak & integrasi state
-├── index.html                 # Struktur dasar dokumen HTML
-├── package.json               # Daftar dependensi & script pembangunan proyek
-├── tsconfig.json              # Konfigurasi compiler TypeScript
-└── vite.config.ts             # Konfigurasi optimasi bundler Vite
+│   ├── components/
+│   │   ├── Header.tsx
+│   │   ├── ThemeProvider.tsx
+│   │   ├── PayloadForms.tsx
+│   │   ├── StyleCustomizer.tsx
+│   │   ├── QRPreview.tsx
+│   │   ├── HistorySidebar.tsx
+│   │   └── Toast.tsx
+│   ├── hooks/
+│   │   └── useQrHistory.ts
+│   ├── utils/
+│   │   ├── qrDraw.ts
+│   │   └── qrPayloads.ts
+│   ├── types.ts
+│   ├── index.css
+│   ├── main.tsx
+│   └── App.tsx
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
 ```
 
 ---
 
-## 💻 Teknologi yang Digunakan
+# 💻 Tech Stack
 
-*   **UI Library:** [React 19](https://react.dev/) (menggunakan fungsional komponen dan React Hooks modern).
-*   **Language:** [TypeScript](https://www.typescriptlang.org/) untuk keamanan tipe data, auto-completion maksimal, dan pencegahan bug saat pengembangan.
-*   **Styling Engine:** [Tailwind CSS v4.0](https://tailwindcss.com/) dengan arsitektur kecepatan tinggi, variabel CSS bawaan, dan kustomisasi tema yang dinamis.
-*   **Animations:** [Motion](https://motion.dev/) (sebelumnya Framer Motion) untuk transisi layout yang fluid, efek hover, dan animasi kemunculan panel yang elegan.
-*   **Icons:** [Lucide React](https://lucide.dev/) untuk visualisasi ikon antarmuka yang konsisten dan minimalis.
-*   **QR Core Generator:** [node-qrcode](https://github.com/soldair/node-qrcode) sebagai pustaka dasar penghasil matriks biner QR tepercaya.
-*   **Export Engines:** [html-to-image](https://github.com/bubkoo/html-to-image) untuk pemrosesan gambar beresolusi tinggi, serta [jspdf](https://github.com/parallax/jsPDF) untuk format dokumen portabel.
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Motion
+- Lucide React
+- node-qrcode
+- html-to-image
+- jsPDF
+- Vite
 
 ---
 
-## 🚀 Panduan Instalasi & Pengoperasian Lokal
+# 🚀 Installation
 
-Ikuti langkah-langkah di bawah ini untuk memasang dan menjalankan proyek ini di komputer Anda:
+## Requirements
 
-### 1. Prasyarat Sistem
-Pastikan Anda telah memasang:
-*   [Node.js](https://nodejs.org/) (Sangat direkomendasikan versi LTS terbaru atau minimal versi 18.x).
-*   Manajer paket seperti `npm` (bawaan Node.js), `yarn`, atau `pnpm`.
+- Node.js 18+
+- npm / yarn / pnpm
 
-### 2. Kloning Repositori
-Buka terminal Anda dan jalankan perintah berikut:
+## Clone Repository
+
 ```bash
-git clone https://github.com/username-anda/nama-repositori-anda.git
-cd nama-repositori-anda
+git clone https://github.com/RobsHs/QR-PRO.git
+cd QR-PRO
 ```
 
-### 3. Instalasi Dependensi
-Unduh semua pustaka yang diperlukan untuk proyek dengan menjalankan:
+---
+
+## Install Dependencies
+
 ```bash
 npm install
 ```
-*(atau jika menggunakan Yarn: `yarn install`, jika menggunakan pnpm: `pnpm install`)*
 
-### 4. Menjalankan Mode Pengembangan (*Development Mode*)
-Nyalakan server lokal untuk mulai melakukan perubahan dan melihat hasilnya secara langsung (*live preview*):
+or
+
+```bash
+yarn install
+```
+
+or
+
+```bash
+pnpm install
+```
+
+---
+
+## Development
+
 ```bash
 npm run dev
 ```
-Setelah server menyala, buka browser Anda dan akses tautan berikut:
-`http://localhost:3000`
 
-### 5. Kompilasi untuk Produksi (*Production Build*)
-Jika Anda ingin mempublikasikan aplikasi ini ke hosting statis (seperti GitHub Pages, Netlify, Vercel, atau Cloudflare Pages), lakukan kompilasi terlebih dahulu:
+Open:
+
+```
+http://localhost:3000
+```
+
+---
+
+## Production Build
+
 ```bash
 npm run build
 ```
-Perintah di atas akan menghasilkan folder bernama `/dist` yang berisi semua file statis terkompresi (HTML, JS, CSS) yang sangat optimal dan siap diunggah ke penyedia hosting mana pun.
+
+The production-ready files will be generated inside the **dist** directory, ready for deployment on:
+
+- GitHub Pages
+- Vercel
+- Netlify
+- Cloudflare Pages
+- Any static hosting provider
 
 ---
 
-## 🎨 Panduan Kontribusi
+# 🤝 Contributing
 
-Kontribusi dari komunitas sangat kami hargai! Jika Anda ingin meningkatkan fungsionalitas, merapikan antarmuka, atau menambahkan format payload baru, silakan ikuti alur berikut:
+Contributions are always welcome.
 
-1.  **Fork** proyek ini di GitHub.
-2.  Buat cabang fitur baru (`git checkout -b fitur/fitur-keren-anda`).
-3.  Lakukan komit terhadap perubahan Anda (`git commit -m 'Menambahkan fitur keren'`).
-4.  Dorong perubahan ke cabang Anda (`git push origin fitur/fitur-keren-anda`).
-5.  Buat **Pull Request** baru untuk kami tinjau bersama.
+1. Fork this repository.
+2. Create your feature branch.
+
+```bash
+git checkout -b feature/awesome-feature
+```
+
+3. Commit your changes.
+
+```bash
+git commit -m "Add awesome feature"
+```
+
+4. Push your branch.
+
+```bash
+git push origin feature/awesome-feature
+```
+
+5. Open a Pull Request.
 
 ---
 
-## 📄 Lisensi
+# 📄 License
 
-Proyek ini dilisensikan di bawah lisensi **MIT License**. Anda bebas menggunakan, memodifikasi, mendistribusikan, dan memanfaatkan proyek ini baik untuk kebutuhan personal maupun komersial.
+This project is licensed under the **MIT License**.
+
+You are free to use, modify, distribute, and commercialize this project in accordance with the MIT License.
 
 ---
 
 <p align="center">
-  Dibuat dengan penuh dedikasi untuk desainer, pengembang, dan pelaku bisnis yang menginginkan QR Code berkualitas tanpa kompromi. 
+Built with passion for developers, designers, businesses, and creators who demand beautiful, reliable, and professional QR Codes without compromise.
 </p>
