@@ -314,5 +314,5 @@ You are free to use, modify, distribute, and commercialize this project in accor
 ---
 
 <p align="center">
-Built with passion for developers, designers, businesses, and creators who demand beautiful, reliable, and professional QR Codes without compromise..
+Built with passion for developers, designers, businesses, and creators who demand beautiful, reliable, and professional QR Codes without compromise.
 </p>
